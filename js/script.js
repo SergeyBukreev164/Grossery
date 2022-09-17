@@ -317,24 +317,120 @@ window.addEventListener('DOMContentLoaded', function()  {
     }       //========thanksmodal
 
     // JSON============
+
    //slider  ==========
-    fetch('http://localhost:3000/menu')
-    .then(data => data.json())
-    .then(result => console.log(result[1]));
+
+   const slider = document.querySelectorAll('.offer__slide'),
+         sliderPrev = document.querySelector('.offer__slider-prev'),
+         sliderNext = document.querySelector('.offer__slider-next'),
+         total = document.querySelector('#total'),
+         current = document.querySelector('#current'),
+         slideWrapper = document.querySelector('.offer__slider-wrapper'),
+         slideInner = document.querySelector('.offer__slider-inner'),
+         width = window.getComputedStyle(slideWrapper).width;
+    let slideIndex = 1,
+        offset = 0;
 
 
-   
+    if (slider.length < 10) {
+        total.textContent = `0${slider.length}`;
+       // current.textContent = `0${slideIndex}`;
+    } else {
+        total.textContent = slider.length;
+       // current.textContent = slideIndex;
+    }
     
-    
-});     
+    slideInner.style.display = 'flex';
+    slideInner.style.width = (100 * slider.length) + '%';
+    slideInner.style.transition = '.5s all';
+    slideWrapper.style.overflow = 'hidden';
 
-    
+    slider.forEach((slide) => {
+        slide.style.width = width;
+    })
 
+    sliderNext.addEventListener('click', () => {
+        if(offset == +width.slice(0, width.length - 2) * (slider.length-1)) { //вычесляем длину и убираем 'px'
+            offset = 0;
+        } else {
+            offset += +width.slice(0, width.length - 2); // при клике вперед слайд смещается на определенную ширину
+        }
         
-    
-    
-    
+        slideInner.style.transform = `translateX(-${offset}px)`;
 
-    
 
+        if (slideIndex == slider.length) {
+            slideIndex = 1
+        } else {
+            slideIndex ++
+        }
+
+        if (slider.length < 10) {
+            current.textContent = `0${slideIndex}`;
+        } else {
+            current.textContent =  slideIndex;
+        }
+    });
+
+    sliderPrev.addEventListener('click', () => {
+        if(offset == 0) { 
+            offset = +width.slice(0, width.length - 2) * (slider.length-1);
+        } else {
+            offset -= +width.slice(0, width.length - 2); // при клике вперед слайд смещается на определенную ширину
+        }
+
+        slideInner.style.transform = `translateX(-${offset}px)`;
+
+        if (slideIndex == 1) {
+            slideIndex = slider.length
+        } else {
+            slideIndex --
+        }
+        if (slider.length < 10) {
+            current.textContent = `0${slideIndex}`;
+        } else {
+            current.textContent =  slideIndex;
+        }
+    });
+   
+
+    // showslide(slideIndex);
+
+    // if (slider.length < 10) {
+    //     total.textContent = `0${slider.length}`;
+    // } else {
+    //     total.textContent = slider.length;
+    // }
+
+    // function showslide (n) {
+    //     if (n > slider.length) {
+    //         slideIndex = 1;
+    //     }
+    //     if (n < 1) {    
+    //         slideIndex = slider.length;
+    //     }
+    //     slider.forEach((item) => item.style.display = 'none');
+    //     slider[slideIndex-1].style.display = 'block';
+    //     slider[slideIndex-1].style.transition = 'all .6s linear';
+
+    //     if (slider.length < 10) {
+    //         current.textContent = `0${slideIndex}`;
+    //     } else {
+    //         current.textContent = slideIndex;
+    //     }
+
+    // }
+    // function currentSlides (n) {
+    //     showslide(slideIndex += n);
+    // }
+    // sliderNext.addEventListener('click', () => {
+    // currentSlides(1);
+    // });
+    // sliderPrev.addEventListener('click', () => {
+    //   currentSlides(-1);
+    // })
+
+
+   //slider  ==========
+});     
 
